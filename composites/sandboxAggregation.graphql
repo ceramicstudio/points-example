@@ -1,0 +1,18 @@
+# (for reference only)
+
+interface PointsAggregationInterface @loadModel(id: "kjzl6hvfrbw6cb6393dpd8blke5w8r7pvbl4449mxetuibcav3oab8fnxmys6d6") {
+  id: ID!
+}
+
+type SandboxPointAggregation implements PointsAggregationInterface # Deployed model ID: kjzl6hvfrbw6ca1wj8fcgf6m3fb3ntmq7ppvyobaqjqg6jdsk0q45mcf9m5x4ri
+  @createModel(
+    description: "Aggregation of multiple Ceramic Sandbox read points to an account"
+    accountRelation: SET
+    accountRelationFields: ["recipient", "context"]
+  ) {
+  issuer: DID! @documentAccount
+  recipient: DID! @accountReference
+  points: Int!
+  date: DateTime!
+  context: String! @string(maxLength: 100)
+}
