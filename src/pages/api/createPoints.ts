@@ -1,7 +1,7 @@
 import { type NextApiRequest, type NextApiResponse } from 'next'
 import { contextWriter, writer } from '@/utils/context'
 import type { ModelInstanceDocument } from '@composedb/types'
-import { PointsContent, type AggregationContent } from '@/utils/types'
+import { type PointsContent, type AggregationContent } from '@/utils/types'
 
 interface Request extends NextApiRequest {
   body: {
