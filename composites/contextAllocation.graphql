@@ -1,0 +1,25 @@
+# (for reference only)
+
+interface PointsAllocationInterface
+  @loadModel(
+    id: "kjzl6hvfrbw6cakj74rf7d3qjnm3xoydcgx7orzw4bwdmc6kljd04uojuhpef2j"
+  ) {
+  id: ID!
+}
+
+type ContextPointAllocation implements PointsAllocationInterface # Deployed model ID: kjzl6hvfrbw6c5l2kczhx056xpefc95kl71b84vf06nvewnhjaaq3jqxve65dlc
+  @createModel(
+    description: "A simple context-based point allocation model"
+    accountRelation: LIST
+  )
+  @createIndex(fields: [{ path: ["context"] }]) 
+  @createIndex(fields: [{ path: ["recipient"] }])
+  @createIndex(fields: [{ path: ["date"] }]) 
+  @createIndex(fields: [{ path: ["multiplier"] }]) {
+  issuer: DID! @documentAccount
+  recipient: DID! @accountReference
+  points: Int!
+  date: DateTime!
+  context: String! @string(maxLength: 1000)
+  multiplier: String! @string(maxLength: 1000)
+}

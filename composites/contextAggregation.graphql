@@ -1,0 +1,18 @@
+# (for reference only)
+
+interface PointsAggregationInterface @loadModel(id: "kjzl6hvfrbw6c5m5bxe6jl7cocyxpg9b8em5w9mo3l8ws4zl5c0tu5vgapitpvk") {
+  id: ID!
+}
+
+type ContextPointAggregation implements PointsAggregationInterface # Deployed model ID (same as in .env): kjzl6hvfrbw6cbe5nn2fktpmpbq42ouepa91pjv899k01yluz6r1zuq5phlliaq
+  @createModel(
+    description: "A simple context-based point aggregation model"
+    accountRelation: SET
+    accountRelationFields: ["recipient", "context"]
+  ) {
+  issuer: DID! @documentAccount
+  recipient: DID! @accountReference
+  points: Int!
+  date: DateTime!
+  context: String! @string(maxLength: 100)
+}
