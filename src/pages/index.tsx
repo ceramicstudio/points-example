@@ -5,7 +5,6 @@ import Head from "next/head";
 import { useAccount, useSignMessage } from "wagmi";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { set } from "zod";
 
 declare global {
   interface Window {
