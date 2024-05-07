@@ -58,6 +58,10 @@ Once installed, run the application in developer mode:
 pnpm dev
 ```
 
+## Other Add-Ons
+
+If you want to view a version that integrates awarding points for having a Gitcoin Passport score, as well as uses the allocation documents from the points library, check out the [with-gitcoin](https://github.com/ceramicstudio/points-example/tree/with-gitcoin) branch.
+
 ## License
 
 Dual licensed under MIT and Apache 2
