@@ -1,5 +1,3 @@
-
-
 export interface Guilds {
   id: string;
   name: string;
@@ -19,5 +17,13 @@ export interface AggregationContent {
 export interface PointsContent {
   recipient: string;
   points: number;
+  date: string;
+}
+
+export interface AllocationContent {
+  recipient: string;
+  points: number;
+  context: string;
+  multiplier?: number;
   date: string;
 }
