@@ -5,6 +5,7 @@ import Head from "next/head";
 import { useAccount, useSignMessage } from "wagmi";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { set } from "zod";
 
 declare global {
   interface Window {
@@ -41,6 +42,11 @@ const AuthShowcase: React.FC = () => {
   const [guilds, setGuilds] = useState<Guilds[] | undefined>(undefined);
   const [claim, setClaim] = useState<boolean>(false);
   const [access, setAccess] = useState<string>("");
+  const [score, setScore] = useState<number | undefined>(undefined);
+  const [passEligible, setPassEligible] = useState<boolean>(false);
+  const [passportTotals, setPassportTotals] = useState<
+    { contextTotal: number; total: number } | undefined
+  >(undefined);
   const [totals, setTotals] = useState<
     { contextTotal: number; total: number } | undefined
   >(undefined);
@@ -69,7 +75,7 @@ const AuthShowcase: React.FC = () => {
         contextTotal: number;
         total: number;
       };
-      setTotals(data);
+      context === "discord" ? setTotals(data) : setPassportTotals(data);
       return data;
     } catch (error) {
       console.error(error);
@@ -121,7 +127,7 @@ const AuthShowcase: React.FC = () => {
         address: string;
         last_score_timestamp: string;
       };
-      console.log(data);
+      setScore(Number(data.score));
     } catch (err) {
       console.log("error: ", err);
     }
@@ -145,7 +151,7 @@ const AuthShowcase: React.FC = () => {
         total: number;
       };
       console.log(data);
-      setTotals(data);
+      context === "discord" ? setTotals(data) : setPassportTotals(data);
       return data;
     } catch (error) {
       console.error(error);
@@ -197,6 +203,26 @@ const AuthShowcase: React.FC = () => {
               </span>
             </h1>
           )}
+          <div className="flex flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20">
+            <div className="text-xl text-white">
+              Discord points claimed:{" "}
+              <span className="text-[hsl(280,100%,70%)]">
+                {totals?.contextTotal ?? 0}
+              </span>
+            </div>
+            <div className="text-xl text-white">
+              Passport points claimed:{" "}
+              <span className="text-[hsl(280,100%,70%)]">
+                {passportTotals?.contextTotal ?? 0}
+              </span>
+            </div>
+            <div className="text-xl text-white">
+              Total points claimed:{" "}
+              <span className="text-[hsl(280,100%,70%)]">
+                {totals?.total ?? 0}
+              </span>
+            </div>
+          </div>
           <div className="flex flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20">
             {!access && (
               <>
@@ -302,33 +328,6 @@ const AuthShowcase: React.FC = () => {
             ) : (
               <></>
             )}
-            {(totals?.contextTotal ?? 0) > 0 && (
-              <div className="text-xl text-white">
-                Discord points claimed:{" "}
-                <span className="text-[hsl(280,100%,70%)]">
-                  {totals?.contextTotal}
-                </span>
-              </div>
-            )}
-            {access ? (
-              <button
-                className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-                onClick={() => {
-                  void signOut();
-                }}
-              >
-                Sign Out
-              </button>
-            ) : (
-              <button
-                className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-                onClick={() => {
-                  void signIn("discord");
-                }}
-              >
-                Connect Discord
-              </button>
-            )}
           </div>
         </>
       )}
@@ -348,14 +347,74 @@ const AuthShowcase: React.FC = () => {
           </div>
         </>
       )}
-      {loggedIn && (
+      {score && passportTotals && passportTotals.contextTotal === 0 && (
+        <>
+          <p className="text-center text-2xl text-white">
+            <span>
+              Your Passport Score:{" "}
+              <span className="text-[hsl(280,100%,70%)]">{score}</span>
+            </span>
+          </p>
+
+          <div className="flex flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20">
+            <div className="text-lg">
+              If eligible, you can claim points below.
+            </div>
+          </div>
+        </>
+      )}
+      {loggedIn && address && !passEligible && (
         <button
           className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-          onClick={() => {
+          onClick={async () => {
+            setGuilds(undefined);
+            const points = await checkPoints(
+              "passport",
+              `did:pkh:eip155:1:${address.toLowerCase()}`,
+            );
+            console.log(points);
+            setPassportTotals(points);
+            if (points?.contextTotal === 0) {
+              setPassEligible(true);
+            }
             void submitPassport();
           }}
         >
           Check Passport Score{" "}
+        </button>
+      )}
+      {passEligible && address && score && (
+        <button
+          className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+          onClick={async () => {
+            await awardPoints(
+              "passport",
+              `did:pkh:eip155:1:${address.toLowerCase()}`,
+              Math.floor(score),
+            );
+            setPassEligible(false);
+          }}
+        >
+          Claim Passport Points
+        </button>
+      )}
+      {access ? (
+        <button
+          className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+          onClick={() => {
+            void signOut();
+          }}
+        >
+          Sign Out
+        </button>
+      ) : (
+        <button
+          className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+          onClick={() => {
+            void signIn("discord");
+          }}
+        >
+          Connect Discord
         </button>
       )}
     </div>
