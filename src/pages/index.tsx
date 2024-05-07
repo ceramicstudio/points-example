@@ -219,7 +219,7 @@ const AuthShowcase: React.FC = () => {
             <div className="text-xl text-white">
               Total points claimed:{" "}
               <span className="text-[hsl(280,100%,70%)]">
-                {totals?.total ?? 0}
+                {(totals?.total ?? passportTotals?.total) ?? 0}
               </span>
             </div>
           </div>
