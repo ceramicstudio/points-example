@@ -1,7 +1,11 @@
 import { PointsWriter, PointsReader } from "@ceramic-solutions/points";
 import { getAuthenticatedDID } from "@ceramic-solutions/key-did";
 import { fromString } from "uint8arrays";
+import { ComposeClient } from "@composedb/client";
+import { definition } from "@/utils/definition";
+import type { RuntimeCompositeDefinition } from "@composedb/types";
 
+const ceramic = process.env.CERAMIC_API ?? "";
 const CERAMIC_PRIVATE_KEY: string = process.env.CERAMIC_PRIVATE_KEY ?? "";
 const aggregationModelID: string | undefined =
   process.env.AGGREGATION_ID ?? undefined;
@@ -38,4 +42,10 @@ const reader = PointsReader.create({
   issuer: issuer.id,
 });
 
-export { contextWriter, writer, contextReader, reader };
+//instantiate a composeDB client instance
+const composeClient = new ComposeClient({
+  ceramic,
+  definition: definition as RuntimeCompositeDefinition,
+});
+
+export { contextWriter, writer, contextReader, reader, composeClient, issuer };

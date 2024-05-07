@@ -36,6 +36,7 @@ export const env = createEnv({
     UNIVERSE_DOMAIN: z.string(),
     GITCOIN_API_KEY: z.string(),
     SCORER_ID: z.string(),
+    CERAMIC_API: z.string().url(),
   },
 
   /**
@@ -70,6 +71,7 @@ export const env = createEnv({
     UNIVERSE_DOMAIN: process.env.UNIVERSE_DOMAIN,
     GITCOIN_API_KEY: process.env.GITCOIN_API_KEY,
     SCORER_ID: process.env.SCORER_ID,
+    CERAMIC_API: process.env.CERAMIC_API,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

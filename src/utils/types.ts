@@ -27,3 +27,16 @@ export interface AllocationContent {
   multiplier?: number;
   date: string;
 }
+
+export interface AllocationNode {
+  points: number;
+  id: string;
+  context: string;
+  issuer: {
+    id: string;
+  };
+  recipient: {
+    id: string;
+  };
+  multiplier?: number;
+}
