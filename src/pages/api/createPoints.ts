@@ -45,39 +45,36 @@ export default async function handler(req: Request, res: Response) {
     const aggregationDoc: ModelInstanceDocument<AggregationContent> | null =
       await contextWriter.loadAggregationDocumentFor([recipient, context]);
 
-    // if aggregation doc does not exist for that context, set points aggregation for both context and global total
-    if (aggregationDoc === null) {
-      // update context-specific aggregation
-      const updatedContextAgg: ModelInstanceDocument<AggregationContent> =
-        await contextWriter.setPointsAggregationFor(
-          [recipient, context],
-          amount,
-          {
-            recipient,
-            points: amount,
-            date: new Date().toISOString(),
-            context,
-          } as Partial<PointsContent>,
-        );
+    // update context-specific aggregation
+    const updatedContextAgg: ModelInstanceDocument<AggregationContent> =
+      await contextWriter.setPointsAggregationFor(
+        [recipient, context],
+        amount + (aggregationDoc?.content?.points ?? 0),
+        {
+          recipient,
+          points: (aggregationDoc?.content?.points ?? 0) + amount,
+          date: new Date().toISOString(),
+          context,
+        } as Partial<PointsContent>,
+      );
 
-      // update total aggregation
-      const updatedTotalAgg: ModelInstanceDocument<AggregationContent> =
-        await writer.updatePointsAggregationFor([recipient], (content) => {
-          return {
-            points: content ? content.points + amount : amount,
-            date: new Date().toISOString(),
-            recipient,
-          };
-        });
-
-      res.status(200).send({
-        contextTotal: updatedContextAgg.content
-          ? updatedContextAgg.content.points
-          : 0,
-        total: updatedTotalAgg.content ? updatedTotalAgg.content.points : 0,
-        allocationDoc: allocation?.content ?? undefined,
+    // update total aggregation
+    const updatedTotalAgg: ModelInstanceDocument<AggregationContent> =
+      await writer.updatePointsAggregationFor([recipient], (content) => {
+        return {
+          points: content ? content.points + amount : amount,
+          date: new Date().toISOString(),
+          recipient,
+        };
       });
-    }
+
+    res.status(200).send({
+      contextTotal: updatedContextAgg.content
+        ? updatedContextAgg.content.points
+        : 0,
+      total: updatedTotalAgg.content ? updatedTotalAgg.content.points : 0,
+      allocationDoc: allocation?.content ?? undefined,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).send({ error: "Internal Server Error" });
