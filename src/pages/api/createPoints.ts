@@ -55,3 +55,11 @@ export default async function handler(req: Request, res: Response) {
     res.status(500).send({ error: 'Internal Server Error' })
   }
 }
+
+const createAllocation = async () => {
+  try {
+
+  } catch (error) {
+    console.error(error)
+  }
+};

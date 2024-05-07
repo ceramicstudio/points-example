@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: Response) {
   }
 }
 
-async function fetchMessageAndNonce() {
+const fetchMessageAndNonce = async () => {
   const axiosSigningMessageConfig = {
     headers: {
       "X-API-KEY": process.env.GITCOIN_API_KEY!,
@@ -35,4 +35,4 @@ async function fetchMessageAndNonce() {
     axiosSigningMessageConfig,
   );
   return data;
-}
+};
