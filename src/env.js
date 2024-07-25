@@ -34,6 +34,7 @@ export const env = createEnv({
    */
   client: {
     // NEXT_PUBLIC_CLIENTVAR: z.string(),
+    NEXT_PUBLIC_PROJECT_ID: z.string(),
   },
 
   /**
@@ -48,6 +49,7 @@ export const env = createEnv({
     DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
     CERAMIC_PRIVATE_KEY: process.env.CERAMIC_PRIVATE_KEY,
     AGGREGATION_ID: process.env.AGGREGATION_ID,
+    NEXT_PUBLIC_PROJECT_ID: process.env.NEXT_PUBLIC_PROJECT_ID,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

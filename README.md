@@ -38,7 +38,7 @@ A default value for this environment variable has been provided for you within t
 
 **PROJECT_ID**
 
-We will be using [WalletConnect's](https://walletconnect.com/) Web3Modal for Web3 authentication. In your [_app.tsx](./src/pages/_app.tsx) file, you will need to enter an active value for the `PROJECT_ID` constant defined on line 10. 
+We will be using [WalletConnect's](https://walletconnect.com/) Web3Modal for Web3 authentication. In your new .env file, assign your project id to the key labeled `NEXT_PUBLIC_PROJECT_ID`. 
 
 You can set up a developer account for free by visiting [cloud.walletconnect.com](https://cloud.walletconnect.com/sign-in). Once authenticated, create a new app and copy over the "Project ID" value (found in the dashboard view for that corresponding app).
 

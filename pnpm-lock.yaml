@@ -35,9 +35,6 @@ importers:
       zod:
         specifier: ^3.22.4
         version: 3.22.5
-      zustand:
-        specifier: ^4.5.2
-        version: 4.5.2(@types/react@18.2.79)(react@18.2.0)
     devDependencies:
       '@ceramic-solutions/key-did':
         specifier: ^0.1.0
